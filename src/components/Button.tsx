@@ -1,7 +1,7 @@
 type ButtonProps = {
   title: string;
   type?: 'button' | 'submit' | 'reset';
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 export default function Button({

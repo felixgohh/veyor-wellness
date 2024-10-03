@@ -2,7 +2,7 @@ export const generateTimeSlots = (
   startHour: number,
   endHour: number,
   interval: number
-) => {
+): string[] => {
   const slots = [];
   const totalMinutesInHour = 60;
 
@@ -16,4 +16,12 @@ export const generateTimeSlots = (
   }
 
   return slots;
+};
+
+export const formatDate = (date: Date): string => {
+  return date.toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 };
