@@ -42,7 +42,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
   const [bookingList, setBookingList] = useState<BookingType[] | []>([]);
 
   const addNewBooking = useCallback(
-    () => (guest: GuestInfoFormType) => {
+    (guest: GuestInfoFormType) => {
       if (selectedSession) {
         const newBooking = { ...selectedSession, ...guest };
         setCurrentBooking(newBooking);
