@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useSection } from '../../context/SectionContext';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useBooking } from '../../context/BookingContext';
+import { formatDate } from '../../utils/time';
 
 export default function MainLayout({
   children,
@@ -8,6 +10,7 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   const { sectionList, activeSection, setActiveSection } = useSection();
+  const { bookingList } = useBooking();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -38,7 +41,7 @@ export default function MainLayout({
               onClick={() => {
                 if (section.path !== activeSection.path) navigate(section.path);
               }}
-              className={`text-xs md:text-sm p-2 flex-1 font-semibold ${
+              className={`text-sm md:text-base p-2 flex-1 font-semibold ${
                 activeSection.path === section.path
                   ? 'bg-white text-black border-b border-b-black'
                   : 'bg-gray-100 text-gray-500'
@@ -48,6 +51,19 @@ export default function MainLayout({
             </button>
           ))}
         </div>
+        {bookingList.length ? (
+          <div className="bg-green-200 text-green-800 px-4 py-2 rounded-lg mb-5 text-sm md:text-base">
+            <p className="font-semibold">Upcoming appointments</p>
+            <ul>
+              {bookingList.map((booking, index) => (
+                <li key={`booking-${index}`} className="list-disc ml-4">
+                  {formatDate(booking.date)} {booking.time}{' '}
+                  {booking.session.name} with Veyor Wellness
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
         {children}
       </main>
     </div>
