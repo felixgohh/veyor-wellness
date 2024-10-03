@@ -37,8 +37,12 @@ export const getNearestTimeSlot = (inputDate: Date): Date => {
   const now = new Date();
   const nearestSlot = new Date(inputDate); // Clone the input date
 
-  // If the input date is in the future, return 10:00 AM of that day
-  if (inputDate > now) {
+  // If the input date is in the future or is today but the hour is less than 10 AM, return 10:00 AM of that day
+  if (
+    inputDate > now ||
+    (inputDate.toDateString() === now.toDateString() &&
+      inputDate.getHours() < 10)
+  ) {
     nearestSlot.setHours(10, 0, 0, 0);
     return nearestSlot;
   }
