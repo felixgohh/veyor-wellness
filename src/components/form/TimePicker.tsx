@@ -1,4 +1,6 @@
+import { useMemo } from 'react';
 import { Controller } from 'react-hook-form';
+import { useBooking } from '../../context/BookingContext';
 
 export default function TimePicker({
   timeSlots,
@@ -7,6 +9,16 @@ export default function TimePicker({
   timeSlots: string[];
   name: string;
 }) {
+  const { bookingList } = useBooking();
+
+  const availableSlots = useMemo(() => {
+    if (bookingList.length) {
+      const bookedTimes = bookingList.map((booking) => booking.time);
+      return timeSlots.filter((slot) => !bookedTimes.includes(slot));
+    }
+    return timeSlots;
+  }, [bookingList, timeSlots]);
+
   return (
     <Controller
       name={name}
@@ -14,7 +26,7 @@ export default function TimePicker({
         return (
           <div className="flex flex-col mt-5">
             <h2 className="font-bold mb-4">Please select a time</h2>
-            {timeSlots.map((slot, index) => (
+            {availableSlots.map((slot, index) => (
               <div key={index} className="mb-4">
                 <label className="flex items-center cursor-pointer">
                   <input
