@@ -34,22 +34,24 @@ export const formatDate = (date: Date | string | undefined): string => {
 };
 
 export const getNearestTimeSlot = (inputDate: Date): Date => {
-  const today = new Date();
-
+  const now = new Date();
   const nearestSlot = new Date(inputDate); // Clone the input date
-  const minutes = inputDate.getMinutes();
 
-  // If the input date is in the future (after today), return 10:00 AM of that day
-  if (inputDate > today) {
-    nearestSlot.setHours(10, 0, 0, 0); // Set to 10:00 AM
+  // If the input date is in the future, return 10:00 AM of that day
+  if (inputDate > now) {
+    nearestSlot.setHours(10, 0, 0, 0);
     return nearestSlot;
   }
 
-  // If input date is today, round to nearest half-hour (either 00 or 30)
-  if (minutes < 30) {
-    nearestSlot.setMinutes(30, 0, 0); // Set to :30 if before :30
-  } else {
-    nearestSlot.setHours(inputDate.getHours() + 1, 0, 0, 0); // Set to next hour if past :30
+  // Round to the nearest half-hour (00 or 30)
+  nearestSlot.setMinutes(inputDate.getMinutes() < 30 ? 30 : 0, 0, 0);
+  if (inputDate.getMinutes() >= 30) {
+    nearestSlot.setHours(inputDate.getHours() + 1);
+  }
+
+  // Cap the time at 11:59 PM if it crosses into the next day
+  if (nearestSlot > now && nearestSlot.getDate() !== now.getDate()) {
+    nearestSlot.setHours(23, 59, 0, 0);
   }
 
   return nearestSlot;
