@@ -11,10 +11,18 @@ import { useEffect } from 'react';
 import Button from '../components/Button';
 
 export default function GuestInfoPage() {
+  const { selectedSession, addNewBooking, currentBooking } = useBooking();
   const methods = useForm<GuestInfoFormType>({
     resolver: yupResolver(guestInfoForm),
+    defaultValues: currentBooking
+      ? {
+          firstName: currentBooking.firstName,
+          lastName: currentBooking.lastName,
+          email: currentBooking.email,
+          mobilePhone: currentBooking.mobilePhone,
+        }
+      : {},
   });
-  const { selectedSession, addNewBooking } = useBooking();
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<GuestInfoFormType> = (data) => {
