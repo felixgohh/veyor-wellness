@@ -1,11 +1,14 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
+type SectionType = {
+  name: string;
+  path: string;
+};
+
 type SectionContextType = {
-  activeSection: number;
-  setActiveSection: (value: number) => void;
-  sectionList: string[];
-  nextSection: () => void;
-  prevSection: () => void;
+  activeSection: SectionType;
+  setActiveSection: (section: SectionType) => void;
+  sectionList: SectionType[];
 };
 
 const SectionContext = createContext<SectionContextType | undefined>(undefined);
@@ -18,29 +21,21 @@ export const useSection = () => {
   return context;
 };
 
+const sectionList: SectionType[] = [
+  { name: 'Choose Appointment', path: '/' },
+  { name: 'Your Info', path: '/guest-info' },
+  { name: 'Confirmation', path: '/confirmation' },
+];
+
 // Provider component
 export const SectionProvider = ({ children }: { children: ReactNode }) => {
-  const sectionList = ['Choose Appoinment', 'Your Info', 'Confirmation'];
-  const [activeSection, setActiveSection] = useState<number>(0);
-
-  const nextSection = () => {
-    if (activeSection < sectionList.length - 1)
-      setActiveSection(activeSection + 1);
-  };
-
-  const prevSection = () => {
-    if (activeSection > 0) setActiveSection(activeSection - 1);
-  };
+  const [activeSection, setActiveSection] = useState<SectionType>(
+    sectionList[0]
+  );
 
   return (
     <SectionContext.Provider
-      value={{
-        activeSection,
-        setActiveSection,
-        sectionList,
-        nextSection,
-        prevSection,
-      }}
+      value={{ activeSection, setActiveSection, sectionList }}
     >
       {children}
     </SectionContext.Provider>
