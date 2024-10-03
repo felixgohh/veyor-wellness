@@ -1,28 +1,22 @@
-import React, { SyntheticEvent, ReactNode } from 'react';
-import { FormProvider, UseFormReturn } from 'react-hook-form';
-import { BookingFormType } from '../../shared/booking.type';
+import React, { ReactNode } from 'react';
+import { FormProvider, UseFormReturn, FieldValues } from 'react-hook-form';
 
-type FormProps = {
+type FormProps<T extends FieldValues> = {
   id?: string;
-  methods: UseFormReturn<BookingFormType>;
-  onSubmit: (values: BookingFormType) => void;
+  methods: UseFormReturn<T>;
+  onSubmit: (values: T) => void;
   children: ReactNode;
 };
 
-export default function FormContainer({
+export default function Form<T extends FieldValues>({
   id = '',
   methods,
   onSubmit,
   children,
-}: FormProps) {
+}: FormProps<T>) {
   const { handleSubmit } = methods;
 
-  const onSubmitForm = async (event: SyntheticEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    return handleSubmit(async (values) => onSubmit(values))(event);
-  };
+  const onSubmitForm = handleSubmit(onSubmit);
 
   return (
     <FormProvider {...methods}>
@@ -30,7 +24,7 @@ export default function FormContainer({
         id={id}
         onSubmit={onSubmitForm}
         autoComplete="off"
-        className="flex flex-col gap-[1.5rem]"
+        className="flex flex-col"
       >
         {children}
       </form>

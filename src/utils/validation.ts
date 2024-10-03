@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-export const bookingForm = yup.object({
+export const bookingSessionForm = yup.object({
   session: yup
     .object({
       name: yup.string().required(),
@@ -10,6 +10,9 @@ export const bookingForm = yup.object({
     .required('Session is required'),
   date: yup.string().required('Booking date is required'),
   time: yup.string().required('Booking time is required'),
+});
+
+export const guestInfoForm = yup.object({
   firstName: yup.string().required('First name is required'),
   lastName: yup.string().required('Last name is required'),
   email: yup

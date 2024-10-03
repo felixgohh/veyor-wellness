@@ -4,10 +4,13 @@ export type SessionType = {
   price: number;
 };
 
-export type BookingFormType = {
+export type BookingSessionFormType = {
   session: SessionType;
   date: string;
   time: string;
+};
+
+export type GuestInfoFormType = {
   firstName: string;
   lastName: string;
   email: string;

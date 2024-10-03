@@ -1,12 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSection } from '../../context/SectionContext';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function MainLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { sectionList, setActiveSection, activeSection } = useSection();
+  const { sectionList, activeSection, setActiveSection } = useSection();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const pathname = location.pathname;
+    const active = sectionList.find((section) => section.path === pathname);
+    if (active && activeSection.path !== active.path) {
+      setActiveSection(active);
+    }
+  }, [location.pathname, activeSection, sectionList, setActiveSection]);
 
   return (
     <div className="flex flex-col justify-center items-center md:w-[60%] mx-auto p-8 md:py-[5%]">
@@ -20,20 +31,20 @@ export default function MainLayout({
       </header>
       <main className="w-full">
         <div className="flex flex-row w-full border border-gray-400 mb-10">
-          {sectionList.map((section, index) => (
+          {sectionList.map((section) => (
             <button
               type="button"
-              key={section}
+              key={section.path}
               onClick={() => {
-                if (index <= activeSection) setActiveSection(index);
+                if (section.path !== activeSection.path) navigate(section.path);
               }}
               className={`text-xs md:text-sm p-2 flex-1 font-semibold ${
-                activeSection === index
+                activeSection.path === section.path
                   ? 'bg-white text-black border-b border-b-black'
                   : 'bg-gray-100 text-gray-500'
               }`}
             >
-              {section}
+              {section.name}
             </button>
           ))}
         </div>
