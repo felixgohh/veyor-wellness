@@ -79,7 +79,7 @@ export default function BookingPage() {
           name="session"
           render={({ field: { onChange } }) => {
             return (
-              <div className="flex flex-col gap-5 w-[90%] mx-auto">
+              <div className="flex flex-col gap-5">
                 {SESSION_LIST.map((session) => (
                   <SessionCard
                     key={session.name}
