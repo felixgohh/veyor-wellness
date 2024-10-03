@@ -11,10 +11,19 @@ import { useEffect } from 'react';
 import Button from '../components/Button';
 
 export default function GuestInfoPage() {
+  const { selectedSession, addNewBooking, currentBooking, isRescheduling } =
+    useBooking();
   const methods = useForm<GuestInfoFormType>({
     resolver: yupResolver(guestInfoForm),
+    defaultValues: currentBooking
+      ? {
+          firstName: currentBooking.firstName,
+          lastName: currentBooking.lastName,
+          email: currentBooking.email,
+          mobilePhone: currentBooking.mobilePhone,
+        }
+      : {},
   });
-  const { selectedSession, addNewBooking } = useBooking();
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<GuestInfoFormType> = (data) => {
@@ -44,7 +53,10 @@ export default function GuestInfoPage() {
         <Input name="phoneNumber" title="Phone" />
         <Input name="email" title="Email *" />
       </div>
-      <Button title="Compelete Appointment" type="submit" />
+      <Button
+        title={`${isRescheduling ? 'Reschedule' : 'Compelete'} Appointment`}
+        type="submit"
+      />
     </Form>
   );
 }

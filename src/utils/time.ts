@@ -1,21 +1,23 @@
 export const generateTimeSlots = (
-  startHour: number,
-  endHour: number,
-  interval: number
+  startDate: Date,
+  endHour: number
 ): string[] => {
   const slots = [];
-  const totalMinutesInHour = 60;
+  let currentSlot = new Date(startDate); // Start from the nearest time slot
 
-  if (startHour < 10) startHour = 10;
+  while (
+    currentSlot.getHours() < endHour ||
+    (currentSlot.getHours() === endHour && currentSlot.getMinutes() === 0)
+  ) {
+    const hours = currentSlot.getHours();
+    const minutes = currentSlot.getMinutes();
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const formattedHour = hours % 12 || 12;
+    const formattedMinutes = minutes === 0 ? '00' : '30';
+    slots.push(`${formattedHour}:${formattedMinutes} ${period}`);
 
-  for (let hour = startHour; hour <= endHour; hour++) {
-    for (let minutes = 0; minutes < totalMinutesInHour; minutes += interval) {
-      if (hour === 16 && minutes > 0) break;
-      const period = hour >= 12 ? 'PM' : 'AM';
-      const formattedHour = hour % 12 || 12;
-      const formattedMinutes = minutes.toString().padStart(2, '0');
-      slots.push(`${formattedHour}:${formattedMinutes} ${period}`);
-    }
+    // Increment by 30 minutes
+    currentSlot.setMinutes(currentSlot.getMinutes() + 30);
   }
 
   return slots;
@@ -31,16 +33,34 @@ export const formatDate = (date: Date | string | undefined): string => {
   });
 };
 
-export const getNearestTimeSlot = (inputDate: Date): number => {
+export const getNearestTimeSlot = (inputDate: Date): Date => {
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
 
-  const timeSlots = [10, 11, 12, 13, 14, 15, 16];
-  const currentHour = new Date().getHours();
+  const nearestSlot = new Date(inputDate); // Clone the input date
+  const minutes = inputDate.getMinutes();
 
-  return inputDate < today
-    ? 0
-    : inputDate.toDateString() === today.toDateString()
-    ? timeSlots.find((slot) => currentHour < slot) || 0
-    : 10;
+  // If the input date is in the future (after today), return 10:00 AM of that day
+  if (inputDate > today) {
+    nearestSlot.setHours(10, 0, 0, 0); // Set to 10:00 AM
+    return nearestSlot;
+  }
+
+  // If input date is today, round to nearest half-hour (either 00 or 30)
+  if (minutes < 30) {
+    nearestSlot.setMinutes(30, 0, 0); // Set to :30 if before :30
+  } else {
+    nearestSlot.setHours(inputDate.getHours() + 1, 0, 0, 0); // Set to next hour if past :30
+  }
+
+  return nearestSlot;
+};
+
+export const checkSameDate = (
+  date1: Date | string,
+  date2: Date | string
+): boolean => {
+  date1 = new Date(date1);
+  date2 = new Date(date2);
+
+  return date1.toDateString() === date2.toDateString();
 };

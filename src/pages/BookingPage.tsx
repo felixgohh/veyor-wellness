@@ -44,9 +44,8 @@ export default function BookingPage() {
 
   const timeSlots = generateTimeSlots(
     // if user selected today's date, they can't select the past hour slots
-    watchedDate ? getNearestTimeSlot(new Date(watchedDate)) : 10,
-    16,
-    30
+    getNearestTimeSlot(watchedDate ? new Date(watchedDate) : new Date()),
+    16
   );
 
   const onSubmit: SubmitHandler<BookingSessionFormType> = (data) => {
