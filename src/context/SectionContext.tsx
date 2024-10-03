@@ -5,6 +5,7 @@ type SectionContextType = {
   setActiveSection: (value: number) => void;
   sectionList: string[];
   nextSection: () => void;
+  prevSection: () => void;
 };
 
 const SectionContext = createContext<SectionContextType | undefined>(undefined);
@@ -27,6 +28,10 @@ export const SectionProvider = ({ children }: { children: ReactNode }) => {
       setActiveSection(activeSection + 1);
   };
 
+  const prevSection = () => {
+    if (activeSection > 0) setActiveSection(activeSection - 1);
+  };
+
   return (
     <SectionContext.Provider
       value={{
@@ -34,6 +39,7 @@ export const SectionProvider = ({ children }: { children: ReactNode }) => {
         setActiveSection,
         sectionList,
         nextSection,
+        prevSection,
       }}
     >
       {children}
