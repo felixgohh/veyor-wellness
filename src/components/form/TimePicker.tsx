@@ -28,6 +28,7 @@ export default function TimePicker({
                           onChange(ev.target.value)
                         }
                         className="h-5 w-5 accent-black"
+                        data-testid={`timepicker-slot-${slot}`}
                       />
                       <span className="ml-2 text-sm md:text-base">{slot}</span>
                     </label>
@@ -35,7 +36,10 @@ export default function TimePicker({
                 ))}
               </>
             ) : (
-              <p className="text-sm md:text-base">
+              <p
+                className="text-sm md:text-base"
+                data-testid="timepicker-no-slot"
+              >
                 No slots available, please choose another date.
               </p>
             )}
