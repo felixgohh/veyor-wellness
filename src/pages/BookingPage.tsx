@@ -38,7 +38,7 @@ export default function BookingPage() {
     useBooking();
   const methods = useForm<BookingSessionFormType>({
     resolver: yupResolver(bookingSessionForm),
-    defaultValues: selectedSession || {},
+    defaultValues: selectedSession || { date: new Date().toISOString() },
   });
   const { watch } = methods;
   const [watchedSession, watchedDate, watchedTime] = watch([
