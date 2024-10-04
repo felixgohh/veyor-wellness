@@ -31,6 +31,7 @@ export default function Input({ name, title, type = 'text' }: InputProps) {
         {...registerInput}
         className={`bg-transparent outline-none border border-gray-300 rounded-lg p-2`}
         onChange={(e) => onChange(e)}
+        data-testid={`input-test-${name}`}
       />
 
       {errors && errors[`${name}`] ? (
