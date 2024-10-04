@@ -1,23 +1,20 @@
-import * as yup from 'yup';
+import { object, string, number } from 'yup';
 
-export const bookingSessionForm = yup.object({
-  session: yup
-    .object({
-      name: yup.string().required(),
-      price: yup.number().required(),
-      minutes: yup.number().required(),
-    })
-    .required('Session is required'),
-  date: yup.string().required('Booking date is required'),
-  time: yup.string().required('Booking time is required'),
+export const bookingSessionForm = object({
+  session: object({
+    name: string().required(),
+    price: number().required(),
+    minutes: number().required(),
+  }).required('Session is required'),
+  date: string().required('Booking date is required'),
+  time: string().required('Booking time is required'),
 });
 
-export const guestInfoForm = yup.object({
-  firstName: yup.string().required('First name is required'),
-  lastName: yup.string().required('Last name is required'),
-  email: yup
-    .string()
+export const guestInfoForm = object({
+  firstName: string().required('First name is required'),
+  lastName: string().required('Last name is required'),
+  email: string()
     .email('Invalid email address')
     .required('Email address is required'),
-  mobilePhone: yup.string(),
+  mobilePhone: string(),
 });
