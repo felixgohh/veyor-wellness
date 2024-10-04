@@ -1,5 +1,16 @@
+import { Suspense } from 'react';
+import MainLayout from './components/layout/MainLayout';
+import { Outlet } from 'react-router-dom';
+import Loading from './components/Loading';
+
 function App() {
-  return <h1 className="text-3xl">Hello World</h1>;
+  return (
+    <MainLayout>
+      <Suspense fallback={<Loading />}>
+        <Outlet />
+      </Suspense>
+    </MainLayout>
+  );
 }
 
 export default App;
