@@ -55,17 +55,21 @@ export default function BookingPage() {
   );
 
   const availableSlots = useMemo(() => {
-    if (bookingList.length && watchedDate && !isRescheduling) {
+    if (bookingList.length && watchedDate) {
       const bookingsForSelectedDate = bookingList.filter((booking) =>
         checkSameDate(booking.date, watchedDate)
       );
       const bookedTimes = bookingsForSelectedDate.map(
         (booking) => booking.time
       );
-      return timeSlots.filter((slot) => !bookedTimes.includes(slot));
+      return timeSlots.filter(
+        (slot) =>
+          !bookedTimes.includes(slot) ||
+          (isRescheduling && slot === selectedSession?.time)
+      );
     }
     return timeSlots;
-  }, [bookingList, watchedDate, isRescheduling, timeSlots]);
+  }, [bookingList, watchedDate, timeSlots, isRescheduling, selectedSession]);
 
   const onSubmit: SubmitHandler<BookingSessionFormType> = (data) => {
     setSelectedSession(data);
