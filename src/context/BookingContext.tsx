@@ -6,6 +6,7 @@ import {
   useMemo,
   useCallback,
 } from 'react';
+import { useToast } from '../hooks/useToast';
 import {
   BookingSessionFormType,
   GuestInfoFormType,
@@ -44,6 +45,7 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
   );
   const [bookingList, setBookingList] = useState<BookingType[] | []>([]);
   const [isRescheduling, setIsRescheduling] = useState<boolean>(false);
+  const toast = useToast();
 
   const addNewBooking = useCallback(
     (guest: GuestInfoFormType) => {
@@ -57,19 +59,28 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
         // If rescheduling, update the specific booking in the list
         if (isRescheduling && currentBooking?.id) {
           setIsRescheduling(false);
-          setCurrentBooking({ ...updatedBooking, id: currentBooking.id });
+          let current = { ...updatedBooking, id: currentBooking.id };
+          setCurrentBooking(current);
+          toast({
+            message: 'Your appointment has been successfully rescheduled',
+            type: 'success',
+          });
           return prevList.map((booking) =>
-            booking.id === currentBooking.id ? updatedBooking : booking
+            booking.id === current.id ? current : booking
           );
         }
 
         // Otherwise, add a new booking to the list
         const newBooking = { ...updatedBooking, id: prevList.length + 1 };
         setCurrentBooking(newBooking);
+        toast({
+          message: 'Your appointment has been successfully booked',
+          type: 'success',
+        });
         return [...prevList, newBooking];
       });
     },
-    [currentBooking, isRescheduling, selectedSession]
+    [currentBooking, isRescheduling, selectedSession, toast]
   );
 
   const clearBooking = useCallback(() => {
@@ -83,7 +94,11 @@ export const BookingProvider = ({ children }: { children: ReactNode }) => {
       list.filter((booking) => booking.id !== currentBooking.id)
     );
     clearBooking();
-  }, [currentBooking, clearBooking]);
+    toast({
+      message: 'Your appointment has been successfully cancelled',
+      type: 'success',
+    });
+  }, [currentBooking, clearBooking, toast]);
 
   const value = useMemo(
     () => ({
